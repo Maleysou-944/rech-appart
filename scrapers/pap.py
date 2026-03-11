@@ -40,10 +40,17 @@ class PapScraper(AbstractScraper):
         soup = BeautifulSoup(html, "lxml")
         annonces = []
 
+        COLOC_KEYWORDS = ("colocation", "coloc", "chambre chez", "chambre en ")
+
         items = soup.select("div.search-list-item-alt")
         for item in items:
             title_link = item.select_one("a.item-title")
             if not title_link:
+                continue
+
+            # Exclure les colocations
+            title_text = title_link.get_text(strip=True).lower()
+            if any(kw in title_text for kw in COLOC_KEYWORDS):
                 continue
 
             # URL
