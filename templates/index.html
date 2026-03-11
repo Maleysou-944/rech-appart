@@ -1,7 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Annonces ({{ annonces|length }})</h1>
-{% for a in annonces %}
-<p>{{ a.titre }} - {{ a.prix }}€</p>
-{% endfor %}
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="card-filtres">
+      <h3>Filtres</h3>
+      <form method="get" action="/">
+        <div class="form-group">
+          <label>Ville</label>
+          <input type="text" name="ville" value="{{ ville or '' }}" placeholder="ex: Créteil">
+        </div>
+        <div class="form-group">
+          <label>Prix max (€)</label>
+          <input type="number" name="prix_max" value="{{ prix_max or '' }}" placeholder="900" min="0" max="900">
+        </div>
+        <div class="form-group">
+          <label>Surface min (m²)</label>
+          <input type="number" name="surface_min" value="{{ surface_min or '' }}" placeholder="25" min="0">
+        </div>
+        <button type="submit" class="btn">Filtrer</button>
+        <a href="/" class="btn btn-reset" style="text-align:center;margin-top:6px;display:block;text-decoration:none">Réinitialiser</a>
+      </form>
+    </div>
+  </aside>
+
+  <main class="main">
+    <p class="count">{{ annonces|length }} annonce(s) trouvée(s)</p>
+
+    {% if annonces %}
+      {% for a in annonces %}
+      <div class="annonce">
+        <div class="annonce-info">
+          <h2>
+            <a href="{{ a.url }}" target="_blank" rel="noopener">{{ a.titre }}</a>
+            {% if a.est_nouvelle %}<span class="badge">Nouveau</span>{% endif %}
+            <span class="badge badge-source">{{ a.source }}</span>
+          </h2>
+          <div class="annonce-meta">
+            {% if a.surface %}📐 {{ a.surface }}m² &nbsp;{% endif %}
+            {% if a.ville %}📍 {{ a.ville }}{% if a.departement %} ({{ a.departement }}){% endif %}{% endif %}
+            &nbsp;· {{ a.date_scrape.strftime('%d/%m %H:%M') }}
+          </div>
+        </div>
+        <div class="annonce-prix">{{ a.prix }}€ CC</div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty">
+        <p>Aucune annonce trouvée.</p>
+        <p style="margin-top:8px;font-size:.85rem">Essaie <a href="/scrape-now">de lancer un scraping manuel</a>.</p>
+      </div>
+    {% endif %}
+  </main>
+
+</div>
 {% endblock %}
