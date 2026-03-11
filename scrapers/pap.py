@@ -1,3 +1,4 @@
+import os
 import re
 import requests
 from typing import List, Dict
@@ -17,16 +18,21 @@ class PapScraper(AbstractScraper):
         self.url = url
 
     def fetch_html(self, url: str) -> str:
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            ),
-            "Accept-Language": "fr-FR,fr;q=0.9",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        }
-        response = requests.get(url, headers=headers, timeout=15)
+        api_key = os.environ.get("SCRAPERAPI_KEY", "")
+        if api_key:
+            proxy_url = f"http://api.scraperapi.com?api_key={api_key}&url={url}&country_code=fr"
+            response = requests.get(proxy_url, timeout=60)
+        else:
+            headers = {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/120.0.0.0 Safari/537.36"
+                ),
+                "Accept-Language": "fr-FR,fr;q=0.9",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            }
+            response = requests.get(url, headers=headers, timeout=15)
         response.raise_for_status()
         return response.text
 
