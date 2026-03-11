@@ -11,5 +11,5 @@ class Config:
     GMAIL_USER = os.environ.get("GMAIL_USER", "")
     GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD", "")
     SCRAPE_INTERVAL_MINUTES = int(os.environ.get("SCRAPE_INTERVAL_MINUTES", "240"))
-    PRIX_MAX = int(os.environ.get("PRIX_MAX", "900"))
+    PRIX_MAX = int(os.environ.get("PRIX_MAX", "1500"))
     SCRAPERAPI_KEY = os.environ.get("SCRAPERAPI_KEY", "")

@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 PAP_PAGES = [
     PAP_PARIS_URL,                    # Paris (75) - page 1
     f"{PAP_PARIS_URL}&page=2",        # Paris (75) - page 2
-    "https://www.pap.fr/annonce/locations-appartement-t2-g456?prix-max=900",  # Hauts-de-Seine (92)
-    "https://www.pap.fr/annonce/locations-appartement-t2-g457?prix-max=900",  # Seine-Saint-Denis (93)
-    "https://www.pap.fr/annonce/locations-appartement-t2-g458?prix-max=900",  # Val-de-Marne (94)
+    "https://www.pap.fr/annonce/locations-appartement-t2-g456?prix-max=1500",  # Hauts-de-Seine (92)
+    "https://www.pap.fr/annonce/locations-appartement-t2-g457?prix-max=1500",  # Seine-Saint-Denis (93)
+    "https://www.pap.fr/annonce/locations-appartement-t2-g458?prix-max=1500",  # Val-de-Marne (94)
 ]
 
 

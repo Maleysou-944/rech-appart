@@ -9,7 +9,7 @@ from .base import AbstractScraper
 BASE_URL = "https://www.pap.fr"
 SEARCH_URL = (
     "https://www.pap.fr/annonce/locations-appartement-t2-ile-de-france-g439-bu2p0"
-    "?prix-max=900"
+    "?prix-max=1500"
 )
 
 
