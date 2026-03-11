@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Annonces ({{ annonces|length }})</h1>
+{% for a in annonces %}
+<p>{{ a.titre }} - {{ a.prix }}€</p>
+{% endfor %}
+{% endblock %}
