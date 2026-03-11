@@ -1,3 +1,4 @@
+import threading
 from flask import Flask, render_template, request
 from models import db, Annonce
 from config import Config
@@ -46,14 +47,8 @@ def create_app(test_config=None):
 
     @app.route("/scrape-now")
     def scrape_now():
-        try:
-            scrape_and_notify(app)
-            from models import Annonce as A
-            total = A.query.count()
-            return f"Scraping terminé. Total annonces en base: {total}", 200
-        except Exception as e:
-            print(f"SCRAPE ERROR: {e}", flush=True)
-            return f"Erreur: {e}", 500
+        threading.Thread(target=scrape_and_notify, args=(app,), daemon=True).start()
+        return "Scraping lancé en arrière-plan. Reviens dans 1 minute sur la page principale.", 200
 
     return app
 
