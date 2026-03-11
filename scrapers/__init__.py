@@ -5,13 +5,12 @@ from .logicimmo import LogicImmoScraper, SEARCH_URL as LOGICIMMO_URL
 logger = logging.getLogger(__name__)
 
 PAP_PAGES = [
-    f"{PAP_URL}&page={i}" for i in range(1, 4)
+    f"{PAP_URL}&page={i}" for i in range(1, 3)
 ]
 
 LOGICIMMO_PAGES = [
     LOGICIMMO_URL,
     LOGICIMMO_URL + "/page=2",
-    LOGICIMMO_URL + "/page=3",
 ]
 
 
