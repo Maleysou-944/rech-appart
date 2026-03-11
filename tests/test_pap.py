@@ -27,3 +27,17 @@ def test_pap_prix_dans_budget():
     for a in annonces:
         if a["prix"]:
             assert a["prix"] <= 900
+
+
+def test_pap_annonce_urls_sont_absolues():
+    scraper = PapScraper()
+    annonces = scraper.parse(FIXTURE)
+    for a in annonces:
+        assert a["url"].startswith("https://"), f"URL invalide: {a['url']}"
+
+
+def test_pap_surface_est_entier_ou_none():
+    scraper = PapScraper()
+    annonces = scraper.parse(FIXTURE)
+    for a in annonces:
+        assert a["surface"] is None or isinstance(a["surface"], int)

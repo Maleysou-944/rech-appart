@@ -1,5 +1,8 @@
+import logging
 from .pap import PapScraper
 from .logicimmo import LogicImmoScraper
+
+logger = logging.getLogger(__name__)
 
 
 def run_all_scrapers():
@@ -9,5 +12,5 @@ def run_all_scrapers():
             scraper = ScraperClass()
             results.extend(scraper.scrape())
         except Exception as e:
-            print(f"Erreur {ScraperClass.__name__}: {e}")
+            logger.error(f"Erreur {ScraperClass.__name__}: {e}")
     return results

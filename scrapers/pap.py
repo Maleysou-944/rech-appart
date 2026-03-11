@@ -41,7 +41,9 @@ class PapScraper(AbstractScraper):
                 continue
 
             # URL
-            href = title_link.get("href", "")
+            href = title_link.get("href", "").strip()
+            if not href:
+                continue
             url = href if href.startswith("http") else BASE_URL + href
 
             # Prix — strip &nbsp; and parse number
@@ -74,7 +76,7 @@ class PapScraper(AbstractScraper):
                 if m:
                     surface_str = m.group(1).replace(",", ".").replace("\u00a0", "")
                     try:
-                        surface = float(surface_str)
+                        surface = int(float(surface_str))
                     except ValueError:
                         surface = None
                     break
