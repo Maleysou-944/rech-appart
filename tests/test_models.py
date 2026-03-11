@@ -1,6 +1,7 @@
 from models import Annonce
 from datetime import datetime
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 def test_annonce_creation(db_session):
     annonce = Annonce(
@@ -23,7 +24,7 @@ def test_annonce_url_unique(db_session):
     db_session.add(Annonce(url=url, titre="A", prix=800, source="pap"))
     db_session.commit()
     db_session.add(Annonce(url=url, titre="B", prix=800, source="pap"))
-    with pytest.raises(Exception):
+    with pytest.raises(IntegrityError):
         db_session.commit()
 
 def test_annonce_est_nouvelle(db_session):
