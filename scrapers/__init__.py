@@ -13,4 +13,5 @@ def run_all_scrapers():
             results.extend(scraper.scrape())
         except Exception as e:
             logger.error(f"Erreur {ScraperClass.__name__}: {e}")
+            print(f"SCRAPER ERROR {ScraperClass.__name__}: {e}", flush=True)
     return results

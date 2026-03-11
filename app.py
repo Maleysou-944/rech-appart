@@ -46,8 +46,14 @@ def create_app(test_config=None):
 
     @app.route("/scrape-now")
     def scrape_now():
-        scrape_and_notify(app)
-        return "Scraping terminé", 200
+        try:
+            scrape_and_notify(app)
+            from models import Annonce as A
+            total = A.query.count()
+            return f"Scraping terminé. Total annonces en base: {total}", 200
+        except Exception as e:
+            print(f"SCRAPE ERROR: {e}", flush=True)
+            return f"Erreur: {e}", 500
 
     return app
 
