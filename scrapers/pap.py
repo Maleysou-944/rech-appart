@@ -2,6 +2,7 @@ import os
 import re
 import requests
 from typing import List, Dict
+from urllib.parse import quote
 from bs4 import BeautifulSoup
 
 from .base import AbstractScraper
@@ -20,7 +21,7 @@ class PapScraper(AbstractScraper):
     def fetch_html(self, url: str) -> str:
         api_key = os.environ.get("SCRAPERAPI_KEY", "")
         if api_key:
-            proxy_url = f"http://api.scraperapi.com?api_key={api_key}&url={url}&country_code=fr"
+            proxy_url = f"http://api.scraperapi.com?api_key={api_key}&url={quote(url, safe='')}&country_code=fr"
             response = requests.get(proxy_url, timeout=60)
         else:
             headers = {

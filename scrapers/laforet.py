@@ -2,6 +2,7 @@ import os
 import re
 import requests
 from typing import List, Dict
+from urllib.parse import quote
 from bs4 import BeautifulSoup
 
 from .base import AbstractScraper
@@ -25,7 +26,7 @@ class LaforetScraper(AbstractScraper):
         if api_key:
             proxy_url = (
                 f"http://api.scraperapi.com?api_key={api_key}"
-                f"&url={url}&country_code=fr"
+                f"&url={quote(url, safe='')}&country_code=fr"
             )
             response = requests.get(proxy_url, timeout=60)
         else:
