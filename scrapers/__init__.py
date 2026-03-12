@@ -1,5 +1,6 @@
 import logging
 from .pap import PapScraper, SEARCH_URL as PAP_PARIS_URL
+from .laforet import LaforetScraper, SEARCH_URL as LAFORET_URL
 
 logger = logging.getLogger(__name__)
 
@@ -30,5 +31,15 @@ def run_all_scrapers():
         except Exception as e:
             logger.error(f"Erreur PAP {url}: {e}")
             print(f"SCRAPER ERROR PAP {url}: {e}", flush=True)
+
+    laforet = LaforetScraper()
+    try:
+        html = laforet.fetch_html(LAFORET_URL)
+        annonces = laforet.parse(html)
+        results.extend(annonces)
+        print(f"Laforêt: OK ({len(annonces)} annonces IDF)", flush=True)
+    except Exception as e:
+        logger.error(f"Erreur Laforêt: {e}")
+        print(f"SCRAPER ERROR Laforêt: {e}", flush=True)
 
     return results
