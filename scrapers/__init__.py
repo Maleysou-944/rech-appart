@@ -17,6 +17,10 @@ PAP_PAGES = [
 
 # BienIci : écarté — site SPA ou inaccessible, HTML des annonces non disponible sans JavaScript
 
+# Century21 : écarté — site SPA, le paramètre localisation= n'est pas traité côté serveur ;
+# les seuls éléments HTML présents sont des "coups de coeur" éditoriaux (9 annonces nationales),
+# pas des résultats filtrés par département IDF.
+
 
 def run_all_scrapers():
     results = []
