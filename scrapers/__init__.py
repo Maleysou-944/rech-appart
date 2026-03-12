@@ -14,6 +14,9 @@ PAP_PAGES = [
 ]
 
 
+# BienIci : écarté — site SPA ou inaccessible, HTML des annonces non disponible sans JavaScript
+
+
 def run_all_scrapers():
     results = []
 
