@@ -14,12 +14,66 @@ nav h1 { font-size: 1.1rem; }
 .btn { display: block; width: 100%; padding: 8px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: .9rem; margin-top: 4px; }
 .btn:hover { background: #34495e; }
 .btn-reset { background: #eee; color: #333; }
-.annonce { background: white; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); display: flex; justify-content: space-between; align-items: flex-start; }
-.annonce-info h2 { font-size: 1rem; margin-bottom: 4px; }
-.annonce-info h2 a { color: #2c3e50; text-decoration: none; }
-.annonce-info h2 a:hover { text-decoration: underline; }
-.annonce-meta { font-size: .82rem; color: #777; }
-.annonce-prix { font-size: 1.1rem; font-weight: bold; color: #27ae60; white-space: nowrap; }
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 700px) {
+    .cards-grid { grid-template-columns: 1fr; }
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-titre a {
+    font-size: .95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    text-decoration: none;
+    line-height: 1.35;
+}
+
+.card-titre a:hover { text-decoration: underline; }
+
+.card-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+
+.card-prix {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #27ae60;
+}
+
+.card-meta {
+    font-size: .83rem;
+    color: #777;
+}
+
+.card-footer {
+    font-size: .76rem;
+    color: #bbb;
+    margin-top: 4px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .83rem;
+    color: #555;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.checkbox-label input { width: auto; }
 .badge { display: inline-block; background: #27ae60; color: white; font-size: .7rem; padding: 2px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
 .badge-source { background: #3498db; }
 .empty { text-align: center; padding: 40px; color: #999; }
