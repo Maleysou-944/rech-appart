@@ -73,8 +73,39 @@
 {% if annonces %}
   <div class="cards-grid">
     {% for a in annonces %}
+    {% set imgs = a.get_images() %}
     <div class="card">
-      <div>
+      {# Zone photos #}
+      {% if imgs %}
+      <div class="carousel" data-carousel>
+        <div class="carousel-track">
+          {% for img_url in imgs %}
+          <div class="carousel-slide">
+            <img src="{{ img_url }}" alt="{{ a.titre }}" loading="lazy"
+                 onerror="this.closest('.carousel-slide').style.display='none';adjustCarousel(this.closest('[data-carousel]'))">
+          </div>
+          {% endfor %}
+        </div>
+        {% if imgs|length > 1 %}
+        <button class="carousel-btn prev" aria-label="Précédent">&#8249;</button>
+        <button class="carousel-btn next" aria-label="Suivant">&#8250;</button>
+        <div class="carousel-dots">
+          {% for _ in imgs %}
+          <button class="carousel-dot{% if loop.first %} active{% endif %}" aria-label="Image {{ loop.index }}"></button>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="carousel-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </div>
+      {% endif %}
+      {# Contenu card #}
+      <div class="card-body">
         <div class="card-badges">
           {% if a.est_nouvelle %}<span class="badge">Nouveau</span>{% endif %}
           <span class="badge badge-source">{{ a.source }}</span>
@@ -83,13 +114,13 @@
         <div class="card-titre">
           <a href="{{ a.url }}" target="_blank" rel="noopener">{{ a.titre }}</a>
         </div>
+        <div class="card-prix">{{ a.prix }}€ CC</div>
+        <div class="card-meta">
+          {% if a.surface %}📐 {{ a.surface }}m²&nbsp; {% endif %}
+          {% if a.ville %}📍 {{ a.ville }}{% if a.departement %} ({{ a.departement }}){% endif %}{% endif %}
+        </div>
+        <div class="card-footer">{{ a.date_scrape.strftime('%d/%m %H:%M') }}</div>
       </div>
-      <div class="card-prix">{{ a.prix }}€ CC</div>
-      <div class="card-meta">
-        {% if a.surface %}📐 {{ a.surface }}m²&nbsp; {% endif %}
-        {% if a.ville %}📍 {{ a.ville }}{% if a.departement %} ({{ a.departement }}){% endif %}{% endif %}
-      </div>
-      <div class="card-footer">{{ a.date_scrape.strftime('%d/%m %H:%M') }}</div>
     </div>
     {% endfor %}
   </div>
@@ -100,4 +131,61 @@
   </div>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+function replaceWithPlaceholder(el) {
+  var placeholder = document.createElement('div');
+  placeholder.className = 'carousel-placeholder';
+  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', '48'); svg.setAttribute('height', '48');
+  svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.2');
+  svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+  var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z');
+  var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+  poly.setAttribute('points', '9 22 9 12 15 12 15 22');
+  svg.appendChild(path); svg.appendChild(poly);
+  placeholder.appendChild(svg);
+  if (el.parentNode) el.parentNode.replaceChild(placeholder, el);
+}
+
+function adjustCarousel(el) {
+  if (!el) return;
+  var visible = Array.from(el.querySelectorAll('.carousel-slide')).filter(function(s) {
+    return s.style.display !== 'none';
+  });
+  if (!visible.length) replaceWithPlaceholder(el);
+}
+
+function initCarousel(el) {
+  var track = el.querySelector('.carousel-track');
+  var dots = el.querySelectorAll('.carousel-dot');
+  var slides = el.querySelectorAll('.carousel-slide');
+  var current = 0;
+
+  function visibleSlides() {
+    return Array.from(slides).filter(function(s) { return s.style.display !== 'none'; });
+  }
+
+  function go(idx) {
+    var visible = visibleSlides();
+    if (!visible.length) { replaceWithPlaceholder(el); return; }
+    current = Math.max(0, Math.min(idx, visible.length - 1));
+    track.style.transform = 'translateX(-' + visible[current].offsetLeft + 'px)';
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+  }
+
+  var prev = el.querySelector('.prev');
+  var next = el.querySelector('.next');
+  if (prev) prev.addEventListener('click', function() { go(current - 1); });
+  if (next) next.addEventListener('click', function() { go(current + 1); });
+  dots.forEach(function(d, i) { d.addEventListener('click', function() { go(i); }); });
+  go(0);
+}
+
+document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+</script>
 {% endblock %}

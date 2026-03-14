@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import requests
@@ -97,6 +98,22 @@ class ParuVenduScraper(AbstractScraper):
                 if self.est_colocation(titre):
                     continue
 
+                # Images — dans div.blocMedia (sibling du container item)
+                images = None
+                bloc = item.parent.select_one("div.blocMedia") if item.parent else None
+                if bloc:
+                    img_urls = []
+                    for img in bloc.find_all("img", src=True):
+                        src = img.get("src", "")
+                        if (src and src.startswith("http")
+                                and "transparent" not in src
+                                and "1x1" not in src):
+                            img_urls.append(src)
+                        if len(img_urls) >= 3:
+                            break
+                    if img_urls:
+                        images = json.dumps(img_urls)
+
                 annonces.append({
                     "url": url,
                     "titre": titre,
@@ -105,6 +122,7 @@ class ParuVenduScraper(AbstractScraper):
                     "ville": ville,
                     "departement": departement,
                     "source": "paruvendu",
+                    "images": images,
                 })
             except Exception as e:
                 logger.debug("ParuVendu: skip annonce: %s", e)

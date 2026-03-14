@@ -104,6 +104,26 @@ class LeBonCoinScraper(AbstractScraper):
                 if self.est_colocation(subject) or self.est_colocation(titre):
                     continue
 
+                # Images — dans ad["images"]["urls"], jusqu'à 3 URLs
+                images = None
+                raw_images = ad.get("images", {})
+                if isinstance(raw_images, dict):
+                    urls = raw_images.get("urls", [])
+                    if not urls:
+                        # Fallback : small_url (str) ou image_url (str)
+                        small = raw_images.get("small_url")
+                        if small and small.startswith("http"):
+                            urls = [small]
+                    if not urls:
+                        direct = ad.get("image_url")
+                        if direct and direct.startswith("http"):
+                            urls = [direct]
+                    valid = [u for u in urls[:3] if u and u.startswith("http")]
+                    if valid:
+                        images = json.dumps(valid)
+                    else:
+                        logger.debug("LeBonCoin images keys: %s", list(raw_images.keys()))
+
                 annonces.append({
                     "url": url,
                     "titre": titre,
@@ -112,6 +132,7 @@ class LeBonCoinScraper(AbstractScraper):
                     "ville": ville,
                     "departement": departement,
                     "source": "leboncoin",
+                    "images": images,
                 })
             except Exception as e:
                 logger.debug("LeBonCoin: skip annonce %s: %s", ad.get("list_id"), e)
