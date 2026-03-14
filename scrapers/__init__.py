@@ -2,6 +2,7 @@ import logging
 from .pap import PapScraper
 from .laforet import LaforetScraper
 from .leboncoin import LeBonCoinScraper
+from .paruvendu import ParuVenduScraper
 
 logger = logging.getLogger(__name__)
 
@@ -75,5 +76,15 @@ def run_all_scrapers():
     except Exception as e:
         logger.error(f"Erreur LeBonCoin: {e}")
         print(f"SCRAPER ERROR LeBonCoin: {e}", flush=True)
+
+    paruvendu = ParuVenduScraper()
+    try:
+        html = paruvendu.fetch_html(paruvendu.url)
+        annonces_pv = paruvendu.parse(html)
+        results.extend(annonces_pv)
+        print(f"ParuVendu: OK ({len(annonces_pv)} annonces IDF)", flush=True)
+    except Exception as e:
+        logger.error(f"Erreur ParuVendu: {e}")
+        print(f"SCRAPER ERROR ParuVendu: {e}", flush=True)
 
     return results
