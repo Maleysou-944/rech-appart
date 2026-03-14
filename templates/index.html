@@ -1,85 +1,103 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="layout">
 
-  <aside class="sidebar">
-    <div class="card-filtres">
-      <h3>Filtres</h3>
-      <form method="get" action="/">
-        <div class="form-group">
-          <label>Ville</label>
-          <input type="text" name="ville" value="{{ ville or '' }}" placeholder="ex: Paris">
-        </div>
-        <div class="form-group">
-          <label>Prix max (€)</label>
-          <input type="number" name="prix_max" value="{{ prix_max or '' }}" placeholder="1500" min="0" max="1500">
-        </div>
-        <div class="form-group">
-          <label>Surface min (m²)</label>
-          <input type="number" name="surface_min" value="{{ surface_min or '' }}" placeholder="25" min="0">
-        </div>
-        <div class="form-group">
-          <label>Département</label>
-          {% for dept, nom in [("75","Paris"),("92","Hauts-de-Seine"),("93","Seine-Saint-Denis"),("94","Val-de-Marne")] %}
-          <label class="checkbox-label">
-            <input type="checkbox" name="departement" value="{{ dept }}"
-                   {% if dept in departements %}checked{% endif %}>
-            {{ dept }} – {{ nom }}
-          </label>
-          {% endfor %}
-        </div>
+<div class="card-filtres">
+  <form method="get" action="/" class="filtres-form">
 
-        {% if sources_dispo %}
-        <div class="form-group">
-          <label>Source</label>
-          {% for s in sources_dispo %}
-          <label class="checkbox-label">
-            <input type="checkbox" name="source" value="{{ s }}"
-                   {% if s in sources %}checked{% endif %}>
-            {{ s }}
-          </label>
-          {% endfor %}
-        </div>
-        {% endif %}
-
-        <button type="submit" class="btn">Filtrer</button>
-        <a href="/" class="btn btn-reset" style="text-align:center;margin-top:6px;display:block;text-decoration:none">Réinitialiser</a>
-      </form>
+    <div class="form-group">
+      <label>Ville</label>
+      <input type="text" name="ville" value="{{ ville or '' }}" placeholder="ex: Paris">
     </div>
-  </aside>
 
-  <main class="main">
-    <p class="count">{{ annonces|length }} annonce(s) trouvée(s)</p>
+    <div class="form-group">
+      <label>Prix max (€)</label>
+      <input type="number" name="prix_max" value="{{ prix_max or '' }}" placeholder="1500" min="0" max="1500">
+    </div>
 
-    {% if annonces %}
-      <div class="cards-grid">
-        {% for a in annonces %}
-        <div class="card">
-          <div>
-            <div class="card-badges">
-              {% if a.est_nouvelle %}<span class="badge">Nouveau</span>{% endif %}
-              <span class="badge badge-source">{{ a.source }}</span>
-            </div>
-            <div class="card-titre">
-              <a href="{{ a.url }}" target="_blank" rel="noopener">{{ a.titre }}</a>
-            </div>
-          </div>
-          <div class="card-prix">{{ a.prix }}€ CC</div>
-          <div class="card-meta">
-            {% if a.surface %}📐 {{ a.surface }}m²&nbsp; {% endif %}
-            {% if a.ville %}📍 {{ a.ville }}{% if a.departement %} ({{ a.departement }}){% endif %}{% endif %}
-          </div>
-          <div class="card-footer">{{ a.date_scrape.strftime('%d/%m %H:%M') }}</div>
-        </div>
+    <div class="form-group">
+      <label>Surface min (m²)</label>
+      <input type="number" name="surface_min" value="{{ surface_min or '' }}" placeholder="25" min="0">
+    </div>
+
+    <div class="form-group-checks">
+      <span>Type</span>
+      <div class="checks-row">
+        {% for t in ["T1","T2","T3"] %}
+        <label class="checkbox-label">
+          <input type="checkbox" name="type_bien" value="{{ t }}"
+                 {% if t in types_bien %}checked{% endif %}>
+          {{ t }}
+        </label>
         {% endfor %}
       </div>
-    {% else %}
-      <div class="empty">
-        <p>Aucune annonce trouvée.</p>
-        <p style="margin-top:8px;font-size:.85rem">Essaie <a href="/scrape-now">de lancer un scraping manuel</a>.</p>
-      </div>
-    {% endif %}
-  </main>
+    </div>
 
+    <div class="form-group-checks">
+      <span>Département</span>
+      <div class="checks-row">
+        {% for dept, nom in [("75","Paris"),("92","Hauts-de-Seine"),("93","Seine-St-Denis"),("94","Val-de-Marne")] %}
+        <label class="checkbox-label">
+          <input type="checkbox" name="departement" value="{{ dept }}"
+                 {% if dept in departements %}checked{% endif %}>
+          {{ dept }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if sources_dispo %}
+    <div class="form-group-checks">
+      <span>Source</span>
+      <div class="checks-row">
+        {% for s in sources_dispo %}
+        <label class="checkbox-label">
+          <input type="checkbox" name="source" value="{{ s }}"
+                 {% if s in sources %}checked{% endif %}>
+          {{ s }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="filtres-actions">
+      <button type="submit" class="btn">Filtrer</button>
+      <a href="/" class="btn btn-reset">Réinitialiser</a>
+    </div>
+
+  </form>
 </div>
+
+<p class="count">{{ annonces|length }} annonce(s) trouvée(s)</p>
+
+{% if annonces %}
+  <div class="cards-grid">
+    {% for a in annonces %}
+    <div class="card">
+      <div>
+        <div class="card-badges">
+          {% if a.est_nouvelle %}<span class="badge">Nouveau</span>{% endif %}
+          <span class="badge badge-source">{{ a.source }}</span>
+          {% if a.type_bien %}<span class="badge" style="background:#8e44ad">{{ a.type_bien }}</span>{% endif %}
+        </div>
+        <div class="card-titre">
+          <a href="{{ a.url }}" target="_blank" rel="noopener">{{ a.titre }}</a>
+        </div>
+      </div>
+      <div class="card-prix">{{ a.prix }}€ CC</div>
+      <div class="card-meta">
+        {% if a.surface %}📐 {{ a.surface }}m²&nbsp; {% endif %}
+        {% if a.ville %}📍 {{ a.ville }}{% if a.departement %} ({{ a.departement }}){% endif %}{% endif %}
+      </div>
+      <div class="card-footer">{{ a.date_scrape.strftime('%d/%m %H:%M') }}</div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty">
+    <p>Aucune annonce trouvée.</p>
+    <p style="margin-top:8px;font-size:.85rem">Essaie <a href="/scrape-now">de lancer un scraping manuel</a>.</p>
+  </div>
+{% endif %}
+
 {% endblock %}

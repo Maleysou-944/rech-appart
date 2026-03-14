@@ -96,6 +96,15 @@ class PapScraper(AbstractScraper):
             # Titre: combine price + ville
             titre = f"{price_el.get_text(strip=True) if price_el else ''} {ville_raw}".strip()
 
+            # Type from tags (e.g. "2 pièces") or title
+            type_bien = None
+            for tag in tags:
+                type_bien = self.detect_type_bien(tag.get_text(separator=" ", strip=True))
+                if type_bien:
+                    break
+            if not type_bien:
+                type_bien = self.detect_type_bien(titre)
+
             annonces.append(
                 {
                     "url": url,
@@ -105,6 +114,7 @@ class PapScraper(AbstractScraper):
                     "ville": ville,
                     "departement": departement,
                     "source": "pap",
+                    "type_bien": type_bien,
                 }
             )
 

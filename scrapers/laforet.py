@@ -124,6 +124,7 @@ class LaforetScraper(AbstractScraper):
                     "ville": ville,
                     "departement": departement,
                     "source": "laforet",
+                    "type_bien": self.detect_type_bien(titre),
                 }
             )
 

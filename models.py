@@ -14,6 +14,7 @@ class Annonce(db.Model):
     ville = db.Column(db.String(100))
     departement = db.Column(db.String(3))
     source = db.Column(db.String(20), nullable=False)
+    type_bien = db.Column(db.String(5))
     date_scrape = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property

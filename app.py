@@ -33,6 +33,7 @@ def create_app(test_config=None):
         surface_min = request.args.get("surface_min", type=int)
         departements = request.args.getlist("departement")
         sources = request.args.getlist("source")
+        types_bien = request.args.getlist("type_bien")
 
         query = Annonce.query.order_by(Annonce.date_scrape.desc())
         if ville:
@@ -45,21 +46,22 @@ def create_app(test_config=None):
             query = query.filter(Annonce.departement.in_(departements))
         if sources:
             query = query.filter(Annonce.source.in_(sources))
+        if types_bien:
+            query = query.filter(Annonce.type_bien.in_(types_bien))
 
         annonces = query.limit(100).all()
-        villes = [v[0] for v in db.session.query(Annonce.ville).distinct().all() if v[0]]
         sources_dispo = [s[0] for s in db.session.query(Annonce.source).distinct().all() if s[0]]
 
         return render_template(
             "index.html",
             annonces=annonces,
-            villes=villes,
             ville=ville,
             prix_max=prix_max,
             surface_min=surface_min,
             departements=departements,
             sources=sources,
             sources_dispo=sources_dispo,
+            types_bien=types_bien,
         )
 
     @app.route("/scrape-now")
