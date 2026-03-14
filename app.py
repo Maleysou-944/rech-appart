@@ -16,13 +16,17 @@ def create_app(test_config=None):
 
     with app.app_context():
         db.create_all()
-        # Migration : ajouter la colonne images si absente (SQLite ne supporte pas IF NOT EXISTS)
+        # Migrations : ajouter les colonnes si absentes (SQLite ne supporte pas IF NOT EXISTS)
         from sqlalchemy import text
-        try:
-            db.session.execute(text("ALTER TABLE annonces ADD COLUMN images TEXT"))
-            db.session.commit()
-        except Exception:
-            pass  # Colonne déjà présente — ignoré silencieusement
+        for col_sql in [
+            "ALTER TABLE annonces ADD COLUMN type_bien VARCHAR(5)",
+            "ALTER TABLE annonces ADD COLUMN images TEXT",
+        ]:
+            try:
+                db.session.execute(text(col_sql))
+                db.session.commit()
+            except Exception:
+                pass  # Colonne déjà présente — ignoré silencieusement
 
     if not test_config:
         scheduler = BackgroundScheduler()
