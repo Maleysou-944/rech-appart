@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # charge le .env local si présent
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key-change-in-prod")
@@ -13,3 +13,4 @@ class Config:
     SCRAPE_INTERVAL_MINUTES = int(os.environ.get("SCRAPE_INTERVAL_MINUTES", "240"))
     PRIX_MAX = int(os.environ.get("PRIX_MAX", "1500"))
     SCRAPERAPI_KEY = os.environ.get("SCRAPERAPI_KEY", "")
+    SCRAPE_SECRET = os.environ.get("SCRAPE_SECRET", "")

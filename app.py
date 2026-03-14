@@ -64,6 +64,9 @@ def create_app(test_config=None):
 
     @app.route("/scrape-now")
     def scrape_now():
+        secret = app.config.get("SCRAPE_SECRET", "")
+        if secret and request.args.get("token") != secret:
+            return "Non autorisé.", 403
         threading.Thread(target=scrape_and_notify, args=(app,), daemon=True).start()
         return "Scraping lancé en arrière-plan. Reviens dans 1 minute sur la page principale.", 200
 
