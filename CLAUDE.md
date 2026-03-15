@@ -9,7 +9,7 @@ Veille immobilière automatisée pour trouver un T2 en Île-de-France à max 150
 - **Scheduler :** APScheduler — scrape toutes les 4h (`SCRAPE_INTERVAL_MINUTES=240`)
 - **Alertes :** Gmail SMTP (`notifier.py`)
 - **Frontend :** Jinja2 + CSS vanilla (pas de JS framework)
-- **Hébergement :** Render.com free tier (gunicorn, `Procfile`)
+- **Hébergement :** Railway (gunicorn, `railway.toml`) — pas de cold start
 - **Tests :** pytest + pytest-flask (31 tests)
 
 ## Architecture
@@ -104,13 +104,15 @@ python -m pytest tests/ -x -q
 # GET /scrape-now
 ```
 
-## Déploiement (Render.com)
+## Déploiement (Railway)
 
 - **Repo GitHub :** https://github.com/Maleysou-944/rech-appart.git
-- **Site :** https://rech-appart-2.onrender.com
-- Push sur `main` → déploiement automatique
-- Variables d'env à configurer dans le dashboard Render (pas de `.env` en prod)
-- Free tier : l'instance dort après 15min d'inactivité → premier chargement lent
+- **Site :** https://web-production-5bcef.up.railway.app (domaine custom : https://appart-rech.com)
+- Push sur `master` → déploiement automatique
+- Variables d'env à configurer dans le dashboard Railway (pas de `.env` en prod)
+- Pas de cold start — APScheduler tourne en permanence
+- **`--workers 1` obligatoire** : APScheduler in-process — plusieurs workers = N scrapes simultanés
+- **`SCRAPE_INTERVAL_MINUTES=1440`** : contrainte ScraperAPI free tier (1000 req/mois)
 
 ## Conventions
 
