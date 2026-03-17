@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://www.logic-immo.com"
 SEARCH_URL = (
     "https://www.logic-immo.com/location-immobilier-ile-de-france,3_0"
-    "/options/groupprptypesids=1/pricemax=900/nbrooms=2"
+    "/options/groupprptypesids=1/pricemax=1500/nbrooms=2"
 )
 
 
