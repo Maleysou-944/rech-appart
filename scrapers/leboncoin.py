@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 SEARCH_URL = (
     "https://www.leboncoin.fr/recherche"
-    "?category=10&locations=Ile-de-France"
-    "&price=max-1500&real_estate_type=2&rooms=1-3"
+    "?category=locations&region=ile-de-france"
+    "&price=min-1500&rooms=2-2&real_estate_type=2"
 )
 BASE_URL = "https://www.leboncoin.fr"
 IDF_DEPTS = {"75", "92", "93", "94"}
