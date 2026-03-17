@@ -1,7 +1,6 @@
 import logging
 from .pap import PapScraper
 from .laforet import LaforetScraper
-from .leboncoin import LeBonCoinScraper
 from .logicimmo import LogicImmoScraper
 from .paruvendu import ParuVenduScraper
 
@@ -67,16 +66,6 @@ def run_all_scrapers():
         except Exception as e:
             logger.error(f"Erreur Laforêt {url}: {e}")
             print(f"SCRAPER ERROR Laforêt {url}: {e}", flush=True)
-
-    leboncoin = LeBonCoinScraper()
-    try:
-        html = leboncoin.fetch_html(leboncoin.url)
-        annonces_lbc = leboncoin.parse(html)
-        results.extend(annonces_lbc)
-        print(f"LeBonCoin: OK ({len(annonces_lbc)} annonces IDF)", flush=True)
-    except Exception as e:
-        logger.error(f"Erreur LeBonCoin: {e}")
-        print(f"SCRAPER ERROR LeBonCoin: {e}", flush=True)
 
     paruvendu = ParuVenduScraper()
     try:
